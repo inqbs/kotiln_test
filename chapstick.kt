@@ -25,11 +25,13 @@ fun main(args: Array<String>) {
         println("""
 			* write your commend
 			(type target/num target/num)
+			ex) A L R, C 2 3
 
 			* type:: A: attack C:change number
 			* target(A):: mine L/R and cpu L/R
 			* num(C):: mine L/R's Number
-		""")
+		""".trimMargin())
+		
         val commend = readLine().toString().trimMargin().split(" ")
 
         println("your commend : ${commend[0]}, ${commend[1]}, ${commend[2]}")
@@ -43,9 +45,9 @@ fun main(args: Array<String>) {
         }
 
         println("""
-		turn: ${status.isMineTurn}
-		mine: ${status.mineScore[0]} : ${status.mineScore[1]}
-		CPU: ${status.cpuScore[0]} : ${status.cpuScore[1]}
+			turn: ${status.isMineTurn}
+			mine: ${status.mineScore[0]} : ${status.mineScore[1]}
+			CPU: ${status.cpuScore[0]} : ${status.cpuScore[1]}
 		""".trimMargin())
         if (status.checkResult()) return
 
