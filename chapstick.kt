@@ -1,5 +1,7 @@
 import kotlin.random.Random
 
+import java.util.ArrayList
+
 class Status {
 
     val mineScore = mutableListOf(1, 1)
@@ -8,7 +10,9 @@ class Status {
     var isMineTurn: Boolean = false
 
     fun checkResult(): Boolean {
-		val result: Boolean = (mineScore[0] >= 5 || mineScore[1] >= 5 || cpuScore[0] >= 5 || cpuScore[1] >= 5);
+		val result: Boolean = 
+			listOf(mineScore[0], mineScore[1], cpuScore[0], cpuScore[1])
+				.filter{it>=5}.size > 0
         return result
     }
 }
