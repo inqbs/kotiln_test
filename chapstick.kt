@@ -1,6 +1,9 @@
 import kotlin.random.Random
 
-import java.util.ArrayList
+const val ATTACK : String = "A"
+const val CHANGE : String = "C"
+const val LEFT : String = "L"
+const val RIGHT : String = "R"
 
 class Status {
 
@@ -10,10 +13,12 @@ class Status {
 	var isMineTurn: Boolean = false
 
 	fun checkResult(): Boolean {
-		val result: Boolean = 
-			listOf(mineScore[0], mineScore[1], cpuScore[0], cpuScore[1])
-				.filter{it>=5}.size > 0
-		return result
+		for((idx, it) in mineScore.withIndex()) if(it>=5) mineScore[idx] = 0
+		for((idx, it) in cpuScore.withIndex()) if(it>=5) cpuScore[idx] = 0
+
+		printStatus(this)
+
+		return mineScore.filter{it!=0}.size == 0 || cpuScore.filter{it!=0}.size == 0
 	}
 }
 
@@ -29,7 +34,7 @@ fun main(args: Array<String>) {
 			(type target/num target/num)
 			ex) A L R, C 2 3
 
-			* type:: A: attack C:change number
+			* type:: ${ATTACK}: attack ${CHANGE}:change number
 			* target(A):: mine L/R and cpu L/R
 			* num(C):: mine L/R's Number
 		""".trimMargin())
@@ -46,12 +51,10 @@ fun main(args: Array<String>) {
 		status.isMineTurn = true
 
 		status = when (type.toUpperCase()) {
-			"A" -> attack(status, firstCommend, secondCommend)
-			"C" -> change(status, firstCommend.toInt(), secondCommend.toInt())
+			ATTACK -> attack(status, firstCommend, secondCommend)
+			CHANGE -> change(status, firstCommend.toInt(), secondCommend.toInt())
 			else -> status
 		}
-
-		printStatus(status)
 
 		if (status.checkResult()) break
 
@@ -59,7 +62,7 @@ fun main(args: Array<String>) {
 		println("is CPU Turn...")
 
 		status =
-			if (4 in status.cpuScore) {
+			if (0 in status.cpuScore || 4 in status.cpuScore) {
 				println("gaurd...")
 				change(status,
 					(status.cpuScore[0] + status.cpuScore[1]) / 2,
@@ -68,8 +71,6 @@ fun main(args: Array<String>) {
 					)
 			} else attack(status, returnHand(), returnHand())
 
-		printStatus(status)
-		
 	} while (!status.checkResult())
 
 	println(if(5 in status.mineScore) "you lose..." else "you win")
@@ -78,8 +79,8 @@ fun main(args: Array<String>) {
 
 fun attack(status: Status, m: String, c: String): Status {
 
-	val mineSide: Int = if (m.toUpperCase() == "L") 0 else 1
-	val attackSide: Int = if (c.toUpperCase() == "L") 0 else 1
+	val mineSide: Int = if (m.toUpperCase() == LEFT) 0 else 1
+	val attackSide: Int = if (c.toUpperCase() == LEFT) 0 else 1
 	val count: Int = if (status.isMineTurn) status.mineScore[mineSide] else status.cpuScore[mineSide]
 
 	if (status.isMineTurn) status.cpuScore[attackSide] += count
@@ -102,7 +103,7 @@ fun change(status: Status, l: Int, r: Int): Status {
 	return status
 }
 
-fun returnHand(): String = if (Random.nextInt(2) % 2 == 0) "L" else "R"
+fun returnHand(): String = if (Random.nextInt(2) % 2 == 0) LEFT else RIGHT
 
 fun isWrongCommend() {
 	println("error!")
