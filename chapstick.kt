@@ -21,6 +21,8 @@ fun main(args: Array<String>) {
 
 	var status = Status()
 
+	printStatus(status)
+
 	do {
 		println("""
 			* write your commend
@@ -49,12 +51,9 @@ fun main(args: Array<String>) {
 			else -> status
 		}
 
-		println("""
-			turn: ${status.isMineTurn}
-			mine: ${status.mineScore[0]} : ${status.mineScore[1]}
-			CPU: ${status.cpuScore[0]} : ${status.cpuScore[1]}
-		""".trimMargin())
-		if (status.checkResult()) return
+		printStatus(status)
+
+		if (status.checkResult()) break
 
 		status.isMineTurn = false
 		println("is CPU Turn...")
@@ -69,11 +68,8 @@ fun main(args: Array<String>) {
 					)
 			} else attack(status, returnHand(), returnHand())
 
-		println("""
-			turn: ${status.isMineTurn}
-			mine: ${status.mineScore[0]} : ${status.mineScore[1]}
-			CPU: ${status.cpuScore[0]} : ${status.cpuScore[1]}
-		""".trimMargin())
+		printStatus(status)
+		
 	} while (!status.checkResult())
 
 	println(if(5 in status.mineScore) "you lose..." else "you win")
@@ -110,4 +106,12 @@ fun returnHand(): String = if (Random.nextInt(2) % 2 == 0) "L" else "R"
 
 fun isWrongCommend() {
 	println("error!")
+}
+
+fun printStatus(status:Status){
+	println("""
+		turn: ${status.isMineTurn}
+		mine: ${status.mineScore[0]} : ${status.mineScore[1]}
+		CPU: ${status.cpuScore[0]} : ${status.cpuScore[1]}
+	""".trimMargin())
 }
