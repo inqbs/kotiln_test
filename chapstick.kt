@@ -4,25 +4,25 @@ import java.util.ArrayList
 
 class Status {
 
-    val mineScore = mutableListOf(1, 1)
-    val cpuScore = mutableListOf(1, 1)
+	val mineScore = mutableListOf(1, 1)
+	val cpuScore = mutableListOf(1, 1)
 
-    var isMineTurn: Boolean = false
+	var isMineTurn: Boolean = false
 
-    fun checkResult(): Boolean {
+	fun checkResult(): Boolean {
 		val result: Boolean = 
 			listOf(mineScore[0], mineScore[1], cpuScore[0], cpuScore[1])
 				.filter{it>=5}.size > 0
-        return result
-    }
+		return result
+	}
 }
 
 fun main(args: Array<String>) {
 
-    var status = Status()
+	var status = Status()
 
-    do {
-        println("""
+	do {
+		println("""
 			* write your commend
 			(type target/num target/num)
 			ex) A L R, C 2 3
@@ -32,56 +32,64 @@ fun main(args: Array<String>) {
 			* num(C):: mine L/R's Number
 		""".trimMargin())
 		
-        val commend = readLine().toString().trimMargin().split(" ")
+		val commend = readLine().toString().trimMargin().split(" ")
+		if(commend.size!=3) continue
 
-        println("your commend : ${commend[0]}, ${commend[1]}, ${commend[2]}")
+		val type:String = commend[0]
+		val firstCommend:String = commend[1]
+		val secondCommend:String = commend[2]
 
-        status.isMineTurn = true
+		println("your commend :${type} ${firstCommend} ${secondCommend}")
 
-        status = when (commend[0].toUpperCase()) {
-            "A" -> attack(status, commend[1], commend[2])
-            "C" -> change(status, commend[1].toInt(), commend[2].toInt())
-            else -> status
-        }
+		status.isMineTurn = true
 
-        println("""
+		status = when (type.toUpperCase()) {
+			"A" -> attack(status, firstCommend, secondCommend)
+			"C" -> change(status, firstCommend.toInt(), secondCommend.toInt())
+			else -> status
+		}
+
+		println("""
 			turn: ${status.isMineTurn}
 			mine: ${status.mineScore[0]} : ${status.mineScore[1]}
 			CPU: ${status.cpuScore[0]} : ${status.cpuScore[1]}
 		""".trimMargin())
-        if (status.checkResult()) return
+		if (status.checkResult()) return
 
-        status.isMineTurn = false
-        println("is CPU Turn...")
+		status.isMineTurn = false
+		println("is CPU Turn...")
 
-        status =
-            if (4 in status.cpuScore) {
-                println("gaurd...")
-                change(status,
-                    (status.cpuScore[0] + status.cpuScore[1]) / 2,
-                    (status.cpuScore[0] + status.cpuScore[1]) / 2 +
-                        if ((status.cpuScore[0] + status.cpuScore[1]) % 2 == 1) 1 else 0
-                    )
-            } else attack(status, returnHand(), returnHand())
+		status =
+			if (4 in status.cpuScore) {
+				println("gaurd...")
+				change(status,
+					(status.cpuScore[0] + status.cpuScore[1]) / 2,
+					(status.cpuScore[0] + status.cpuScore[1]) / 2 +
+						if ((status.cpuScore[0] + status.cpuScore[1]) % 2 == 1) 1 else 0
+					)
+			} else attack(status, returnHand(), returnHand())
 
-        println("""
+		println("""
 			turn: ${status.isMineTurn}
 			mine: ${status.mineScore[0]} : ${status.mineScore[1]}
 			CPU: ${status.cpuScore[0]} : ${status.cpuScore[1]}
 		""".trimMargin())
-    } while (!status.checkResult())
+	} while (!status.checkResult())
+
+	println(if(5 in status.mineScore) "you lose..." else "you win")
+
 }
 
 fun attack(status: Status, m: String, c: String): Status {
 
-    val mineSide: Int = if (m.toUpperCase() == "L") 0 else 1
-    val attackSide: Int = if (c.toUpperCase() == "L") 0 else 1
-    val count: Int = if (status.isMineTurn) status.mineScore[mineSide] else status.cpuScore[mineSide]
+	val mineSide: Int = if (m.toUpperCase() == "L") 0 else 1
+	val attackSide: Int = if (c.toUpperCase() == "L") 0 else 1
+	val count: Int = if (status.isMineTurn) status.mineScore[mineSide] else status.cpuScore[mineSide]
 
-    if (status.isMineTurn) status.cpuScore[attackSide] += count
-    else status.mineScore[attackSide] += count
+	if (status.isMineTurn) status.cpuScore[attackSide] += count
+	else status.mineScore[attackSide] += count
 
-    return status
+	return status
 }
 
 fun change(status: Status, l: Int, r: Int): Status {
@@ -90,18 +98,16 @@ fun change(status: Status, l: Int, r: Int): Status {
 		if (status.isMineTurn) status.mineScore[0] + status.mineScore[1] 
 		else status.cpuScore[0] + status.cpuScore[1];
 
-    if (l in 0..5 && r in 0..5 && total == l + r){
-        if (status.isMineTurn) status.mineScore[0] = l else status.cpuScore[0] = l
-        if (status.isMineTurn) status.mineScore[1] = r else status.cpuScore[1] = r
-    }
+	if (l in 0..5 && r in 0..5 && total == l + r){
+		if (status.isMineTurn) status.mineScore[0] = l else status.cpuScore[0] = l
+		if (status.isMineTurn) status.mineScore[1] = r else status.cpuScore[1] = r
+	}
 
-    return status
+	return status
 }
 
-fun returnHand(): String {
-    return if (Random.nextInt(2) % 2 == 0) "L" else "R"
-}
+fun returnHand(): String = if (Random.nextInt(2) % 2 == 0) "L" else "R"
 
 fun isWrongCommend() {
-    println("error!")
+	println("error!")
 }
