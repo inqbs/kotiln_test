@@ -52,7 +52,9 @@ fun main(args: Array<String>) {
 
 		status = when (type.toUpperCase()) {
 			ATTACK -> attack(status, firstCommend, secondCommend)
-			CHANGE -> change(status, firstCommend.toInt(), secondCommend.toInt())
+			CHANGE -> change(status, 
+				firstCommend.toIntOrNull()?:0, 
+				secondCommend.toIntOrNull()?:0)
 			else -> status
 		}
 
@@ -62,8 +64,8 @@ fun main(args: Array<String>) {
 		println("is CPU Turn...")
 
 		status =
-			if (0 in status.cpuScore || 4 in status.cpuScore) {
-				println("gaurd...")
+			if ((0 in status.cpuScore && 1 !in status.cpuScore)|| 4 in status.cpuScore) {
+				println("CPU: I'm guard...")
 				change(status,
 					(status.cpuScore[0] + status.cpuScore[1]) / 2,
 					(status.cpuScore[0] + status.cpuScore[1]) / 2 +
@@ -73,7 +75,7 @@ fun main(args: Array<String>) {
 
 	} while (!status.checkResult())
 
-	println(if(5 in status.mineScore) "you lose..." else "you win")
+	println(if(status.mineScore.filter{it!=0}.size == 0) "you lose..." else "you win")
 
 }
 
