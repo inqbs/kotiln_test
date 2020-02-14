@@ -8,8 +8,8 @@ const val DEFAULT_PAGE : Int = 1
 fun main(){
 	
 	val pagingDto: PagingUtils = PagingUtils.calculate(
-		nowPage=1,
-		listSize=35,
+		nowPage = 1,
+		listSize = 35,
 		pageSize = 10,
 		rangePage = 10
 	).apply{
@@ -40,7 +40,7 @@ class PagingUtils{
 
 	//	link to prev next on pager
 	val prev: Int
-		get() = if(begin==DEFAULT_PAGE) 1 else begin-1
+		get() = if(begin== DEFAULT_PAGE) 1 else begin-1
 	val next: Int
 		get() = if(end==last) last else end+1
 
@@ -51,7 +51,7 @@ class PagingUtils{
 	var startItemNum: Int = 0
 	var endItemNum: Int = 0
 
-	fun calculate(): PagingUtils{
+	fun calculate(): PagingUtils {
 
 		println("""
 			* listSize : $listSize
@@ -97,7 +97,7 @@ class PagingUtils{
 	}
 
 	companion object{
-		fun calculate(nowPage:Int?, listSize:Int?, pageSize:Int?, rangePage:Int?):PagingUtils{
+		fun calculate(nowPage:Int?, listSize:Int?, pageSize:Int?, rangePage:Int?): PagingUtils {
 			return PagingUtils().apply{
 				this.nowPage = nowPage ?: 1
 				this.listSize = listSize ?: 0
