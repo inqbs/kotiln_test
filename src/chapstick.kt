@@ -18,11 +18,11 @@ class Status {
 
 		printStatus(this)
 
-		return mineScore.filter{it!=0}.size == 0 || cpuScore.filter{it!=0}.size == 0
+		return mineScore.none { it != 0 } || cpuScore.none { it != 0 }
 	}
 }
 
-fun main(args: Array<String>) {
+fun main() {
 
 	var status = Status()
 
@@ -40,13 +40,16 @@ fun main(args: Array<String>) {
 		""".trimMargin())
 		
 		val commend = readLine().toString().trimMargin().split(" ")
-		if(commend.size!=3) continue
+		if(commend.size!=3) {
+			isWrongCommend()
+			continue
+		}
 
 		val type:String = commend[0]
 		val firstCommend:String = commend[1]
 		val secondCommend:String = commend[2]
 
-		println("your commend :${type} ${firstCommend} ${secondCommend}")
+		println("your commend :${type} $firstCommend $secondCommend")
 
 		status.isMineTurn = true
 
@@ -75,7 +78,7 @@ fun main(args: Array<String>) {
 
 	} while (!status.checkResult())
 
-	println(if(status.mineScore.filter{it!=0}.size == 0) "you lose..." else "you win")
+	println(if(status.mineScore.none { it != 0 }) "you lose..." else "you win")
 
 }
 
